@@ -7,11 +7,10 @@ jobs:
     name: Cargo clippy & fmt
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
-    - name: Setup Rust toolchain
-      run: rustup show && rustup update
+    - uses: actions/checkout@v6
+    - uses: dtolnay/rust-toolchain@stable
     - name: cargo fmt
-      run: cargo fmt -- --check
+      run: cargo fmt --all -- --check
     - name: cargo clippy
       run: cargo clippy --all-features --tests -- -D warnings
 
@@ -20,30 +19,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@nightly
 
-      - name: Install nightly and cargo-udeps
-        run: |
-          rustup update
-          rustup toolchain install nightly
-          sudo apt-get install -y wget
-          wget https://github.com/est31/cargo-udeps/releases/download/v0.1.57/cargo-udeps-v0.1.57-x86_64-unknown-linux-musl.tar.gz
-          tar -xzf cargo-udeps-v0.1.57-x86_64-unknown-linux-musl.tar.gz
-          mv cargo-udeps-v0.1.57-x86_64-unknown-linux-musl/cargo-udeps ~/.cargo/bin
-          cargo +nightly udeps
+      - name: Install cargo-udeps
+        uses: taiki-e/install-action@cargo-udeps
+
+      - name: Run cargo-udeps
+        run: cargo +nightly udeps
 
   audit:
     name: Cargo Audit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
 
       - name: Install Cargo Audit
-        run: |
-          wget https://github.com/rustsec/rustsec/releases/download/cargo-audit%2Fv0.21.2/cargo-audit-x86_64-unknown-linux-musl-v0.21.2.tgz
-          tar -xzf cargo-audit-x86_64-unknown-linux-musl-v0.21.2.tgz
-          mv cargo-audit-x86_64-unknown-linux-musl-v0.21.2/cargo-audit ~/.cargo/bin/
+        uses: taiki-e/install-action@cargo-audit
 
       - name: Run Cargo Audit
         run: cargo audit

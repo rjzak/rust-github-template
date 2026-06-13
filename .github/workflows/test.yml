@@ -10,24 +10,16 @@ jobs:
           - host: macos-latest
             name: macOS
           - host: ubuntu-latest
-            name: Linux
+            name: Linux x86_64
+          - host: ubuntu-24.04-arm
+            name: Linux arm64
           - host: windows-latest
-            name: Windows
+            name: Windows x86_64
+          - host: windows-11-arm
+            name: Windows arm64
     runs-on: ${{ matrix.platform.host }}
     steps:
-      - uses: actions/checkout@v5
-      - name: Update Rust toolchain on ${{ matrix.platform.name }}
-        run: rustup update
-      - name: Install extra tools (Windows)
-        uses: ChristopheLav/windows-sdk-install@v1
-        with:
-          version-sdk: 26100
-          features: 'OptionId.DesktopCPParm64'
-        if: matrix.platform.host == 'windows-latest'
-      - run: rustup target install aarch64-pc-windows-msvc
-        if: matrix.platform.host == 'windows-latest'
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
       - name: cargo test on ${{ matrix.platform.name }}
         run: cargo test
-      - name: cargo test on Windows arm64
-        run: cargo build --target=aarch64-pc-windows-msvc
-        if: matrix.platform.host == 'windows-latest'
