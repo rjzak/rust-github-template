@@ -7,7 +7,7 @@ jobs:
     name: Cargo clippy & fmt
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - uses: dtolnay/rust-toolchain@stable
     - name: cargo fmt
       run: cargo fmt --all -- --check
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@nightly
 
       - name: Install cargo-udeps
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
 
       - name: Install Cargo Audit
